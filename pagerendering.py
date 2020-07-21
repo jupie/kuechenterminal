@@ -43,7 +43,6 @@ def unregister_refresh():
 def run():
     print_page()
     schedule.every().day.at('04:30').do(register_refresh)
-
     schedule.every().day.at('22:00').do(unregister_refresh)
 
     while 1:
