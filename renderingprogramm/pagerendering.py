@@ -40,10 +40,14 @@ def unregister_refresh():
     LRYimage = Image.new('1', (epd.height, epd.width), 255)
     epd.display(epd.getbuffer(image), epd.getbuffer(LRYimage))
 
+
 def run():
     print_page()
     if 22 > time.localtime(time.time()).tm_hour > 4:
         register_refresh()
+    else:
+        unregister_refresh()
+
     schedule.every().day.at('04:30').do(register_refresh)
     schedule.every().day.at('22:00').do(unregister_refresh)
 
