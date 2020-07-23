@@ -9,26 +9,17 @@
     <table width="630" style="margin=0px" border="1">
         <tr>
             <td colspan="2">
-                <center>
-                    21.01.2020 22:12
-                </center>
+                 <center><p id="zeit"
+                       style="font-family: Impact; font-size: 30px;font-weight: bold;margin-top:0px; margin-bottom:0px">
+                Uhrzeit</p></center>
             </td>
         </tr>
         <tr>
              <td>
             <table border="1" width="220">
 
-        <tr>
-            <td>22°C</td>
-            <td>17/22°C</td>
-        </tr>
-                  <tr>
-            <td colspan="2">0mm</td>
+      <tr><td>26.2°C</td><td>25.27/26.2°C</td> <td>30%</td></tr><tr><td> 05:43</td><td> 21:21</td><td>93%</td>     </tr><tr><td colspan=3 > Clouds</td>     </tr>
 
-        </tr><tr>
-            <td colspan="2">10kmh</td>
-
-        </tr>
                 <tr><td colspan="3">
                     <table border="1" width="220">
                         <tr>
@@ -63,65 +54,29 @@
 
             <td>
                 <table border="1" width="400">
-        <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
-                     <tr>
-            <td>S8</td>
-            <td>Hanau Hbf</td>
-            <td>17:19</td>
-            <td>+15</td>
-        </tr>
+        <tr><td>S 9</td><td>Hanau Hbf</td><td>18:04</td><td>1</td></tr><tr><td>S 8</td><td>Wiesbaden Hbf</td><td>18:09</td><td>0</td></tr><tr><td>S 8</td><td>Hanau Hbf</td><td>18:19</td><td>0</td></tr><tr><td>S 9</td><td>Mainz-Kastel</td><td>18:24</td><td>1</td></tr><tr><td>S 9</td><td>Hanau Hbf</td><td>18:34</td><td>0</td></tr><tr><td>S 8</td><td>Wiesbaden Hbf</td><td>18:39</td><td>0</td></tr><tr><td>S 8</td><td>Hanau Hbf</td><td>18:49</td><td>0</td></tr><tr><td>S 9</td><td>Mainz-Kastel</td><td>18:54</td><td>0</td></tr><tr><td>S 9</td><td>Hanau Hbf</td><td>19:04</td><td>0</td></tr><tr><td>S 8</td><td>Wiesbaden Hbf</td><td>19:09</td><td>0</td></tr>
+
                     </table>
         </td>
 
 
     </table>
 </center>
+<script>
+
+        var datum = new Date();
+        var minutes = datum.getMinutes();
+        if(minutes < 10){
+        minutes = "0"+minutes;
+        }
+        var german_string = datum.getDate()+"."+datum.getMonth()+"."+datum.getFullYear()+"\t"+datum.getHours()+":"+minutes;
+        var test = document.getElementById("zeit").innerHTML  = german_string;
+
+
+
+
+
+
+</script>
 </body>
 </html>
