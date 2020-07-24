@@ -80,8 +80,8 @@ def weather_info(apikey):
 class Root(object):
     @cherrypy.expose
     def index(self):
-        content = {'trainstation': trainstation_info(), 'weather': weather_info('')}
-        with open('newview.html') as template_file:
+        content = {'trainstation': trainstation_info(), 'weather': weather_info('197c0c3f179cac581544727f0e433132')}
+        with open('view/newview.html') as template_file:
             template = Template(template_file.read())
             out = template.substitute(content)
             return out
