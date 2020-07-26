@@ -4,7 +4,7 @@ import imgkit
 import schedule
 from waveshare_epd import epd7in5bc
 from PIL import Image, ImageDraw, ImageFont
-from view import page
+
 
 
 def renderhtml(url):
@@ -22,7 +22,7 @@ def renderhtml(url):
 
 def print_page():
     print('Download')
-    renderhtml('http://127.0.0.1:8080s')
+    renderhtml('http://127.0.0.1:8080')
     print('Download done')
     image = Image.open(FILE_PATH).convert('L').crop((40, 0, 680, 384))
     LRYimage = Image.new('1', (epd.height, epd.width), 255)

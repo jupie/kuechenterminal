@@ -9,27 +9,29 @@
     <table width="630" style="margin=0px" border="1">
         <tr>
             <td colspan="2">
-                 <center><p id="zeit"
-                       style="margin-top:0px; margin-bottom:0px">
-                Uhrzeit</p></center>
+                <center><p id="zeit"
+                           style="margin-top:0px; margin-bottom:0px">
+                    Uhrzeit</p></center>
             </td>
         </tr>
         <tr>
-             <td>
-            <table border="1" Width="200">
-                $weather
-                 </table>
-        </td>
-
+            <td>
+                <table border="1" Width="200">
+                    $weather
+                </table>
+            </td>
 
 
             <td>
-                <table border="1" width="350" >
+                <table border="1" width="350">
                     $trainstation
-                    </table>
-        </td>
+                </table>
+            </td>
 
-
+        </tr>
+    <tr>
+        <td colspan="2">$feed</td>
+    </tr>
     </table>
 </center>
 <script>
@@ -42,6 +44,8 @@
         }
         var german_string = datum.getDate()+"."+datum.getMonth()+"."+datum.getFullYear()+"\t"+datum.getHours()+":"+minutes;
         var test = document.getElementById("zeit").innerHTML  = german_string;
+
+
 
 
 

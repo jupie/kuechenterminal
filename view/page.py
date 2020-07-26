@@ -6,6 +6,7 @@ from string import Template
 from threading import Thread
 
 import cherrypy
+import feedparser
 
 
 def form_trainstation_string(trainnumber, destination, departure, delay, isCancelled):
@@ -13,6 +14,24 @@ def form_trainstation_string(trainnumber, destination, departure, delay, isCance
         destination = destination + '- Ausfall der Fahrt'
     return '<tr><td>{trainnumber}</td><td>{destination}</td><td>{departure}</td><td>+{delay}</td></tr>'.format(
         trainnumber=trainnumber, destination=destination, departure=departure, delay=delay)
+
+
+def find_extreme_temperature(day):
+    temperature_min = 999.0
+    temperature_max = 0.0
+    for hourly in day:
+        temp = round(hourly['main']['temp'] - 273.15, 2)
+        if temp > temperature_max:
+            temperature_max = temp
+        if temp < temperature_min:
+            temperature_min = temp
+    return temperature_min, temperature_max
+
+
+def get_tagesschau_first():
+    url = "https://www.tagesschau.de/xml/rss2_https/"
+    feed = feedparser.parse(url)
+    return feed.entries[0].title
 
 
 def trainstation_info():
@@ -29,12 +48,12 @@ def trainstation_info():
     return trainstation_string
 
 
-def parse_forecast_day(day, day_of_week):
+def parse_forecast_day(data, day, day_of_week):
     days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
-    day_string = days[day_of_week % 6]
-    tempmin = round(day['main']['temp_min'] - 273.15, 2)
-    tempmax = round(day['main']['temp_max'] - 273.15, 2)
-    mode = day['weather'][0]['main']
+    day_string = days[day_of_week % 7]
+    tempmin, tempmax = find_extreme_temperature(data['list'][day - 3:day + 3])
+
+    mode = data['list'][day]['weather'][0]['main']
     return ' <tr><td> {daystring}</td><td>{max}/{min}°C</td><td>{mode} </td></tr>'.format(daystring=day_string,
                                                                                           max=tempmax, min=tempmin,
                                                                                           mode=mode)
@@ -43,12 +62,10 @@ def parse_forecast_day(day, day_of_week):
 def parse_forcast(weather_json):
     actual = time.localtime(time.time()).tm_hour
     nextday = (24 - actual + 12) // 4
-    table = '<table width220> {content}</table>'
-    next_day_weather = parse_forecast_day(weather_json['list'][nextday], datetime.today().weekday() + 1)
-    next_day_weather = next_day_weather + parse_forecast_day(weather_json['list'][nextday + 6],
-                                                             datetime.today().weekday() + 1)
-    next_day_weather = next_day_weather + parse_forecast_day(weather_json['list'][nextday + 6],
+    next_day_weather = parse_forecast_day(weather_json, nextday, datetime.today().weekday() + 1)
+    next_day_weather = next_day_weather + parse_forecast_day(weather_json, nextday + 6,
                                                              datetime.today().weekday() + 2)
+    next_day_weather = next_day_weather + parse_forecast_day(weather_json, nextday + 12, datetime.today().weekday() + 3)
 
     return next_day_weather
 
@@ -80,8 +97,9 @@ def weather_info(apikey):
 class Root(object):
     @cherrypy.expose
     def index(self):
-        content = {'trainstation': trainstation_info(), 'weather': weather_info('197c0c3f179cac581544727f0e433132')}
-        with open('view/newview.html') as template_file:
+        content = {'trainstation': trainstation_info(), 'weather': weather_info(''),
+                   'feed': get_tagesschau_first()}
+        with open('newview.html') as template_file:
             template = Template(template_file.read())
             out = template.substitute(content)
             return out
@@ -92,3 +110,5 @@ class Server(Thread):
     def run(self) -> None:
         cherrypy.quickstart(Root(), '/')
 
+
+Server().start()
