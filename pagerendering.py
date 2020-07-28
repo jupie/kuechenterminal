@@ -4,7 +4,7 @@ import imgkit
 import schedule
 from waveshare_epd import epd7in5bc
 from PIL import Image, ImageDraw, ImageFont
-
+import page
 
 
 def renderhtml(url):
@@ -24,7 +24,7 @@ def print_page():
     print('Download')
     renderhtml('http://127.0.0.1:8080')
     print('Download done')
-    image = Image.open(FILE_PATH).convert('L').crop((40, 0, 680, 384))
+    image = Image.open(FILE_PATH).convert('L').crop((0, 0, 640, 384))
     LRYimage = Image.new('1', (epd.height, epd.width), 255)
     epd.display(epd.getbuffer(image), epd.getbuffer(LRYimage))
     print('Drawing Done')
@@ -32,12 +32,12 @@ def print_page():
 
 
 def register_refresh():
-    schedule.every(90).seconds.do(print_page, 'refresh')
+    schedule.every(90).seconds.do(print_page).tag('refresh')
 
 
 def unregister_refresh():
     schedule.clear('refresh')
-    image = Image.open('sleeping.bmp').crop((40, 0, 680, 384))
+    image = Image.open('sleeping.bmp').crop((0, 0, 640, 384))
     LRYimage = Image.new('1', (epd.height, epd.width), 255)
     epd.display(epd.getbuffer(image), epd.getbuffer(LRYimage))
 

@@ -11,7 +11,8 @@ import feedparser
 
 def form_trainstation_string(trainnumber, destination, departure, delay, isCancelled):
     if isCancelled != 0:
-        destination = destination + '- Ausfall der Fahrt'
+        delay = 'A'
+    trainnumber = (trainnumber[:4]) if len(trainnumber) > 4 else trainnumber
     return '<tr><td>{trainnumber}</td><td>{destination}</td><td>{departure}</td><td>+{delay}</td></tr>'.format(
         trainnumber=trainnumber, destination=destination, departure=departure, delay=delay)
 
@@ -54,7 +55,7 @@ def parse_forecast_day(data, day, day_of_week):
     tempmin, tempmax = find_extreme_temperature(data['list'][day - 3:day + 3])
 
     mode = data['list'][day]['weather'][0]['main']
-    return ' <tr><td> {daystring}</td><td>{max}/{min}°C</td><td>{mode} </td></tr>'.format(daystring=day_string,
+    return ' <tr><td> {daystring}</td><td>{max}/{min}°C</td></tr><tr><td>{mode} </td></tr>'.format(daystring=day_string,
                                                                                           max=tempmax, min=tempmin,
                                                                                           mode=mode)
 
@@ -84,11 +85,11 @@ def weather_info(apikey):
         pressure = weather_json['list'][0]['main']['pressure']
         clouds = weather_json['list'][0]['clouds']['all']
         mode = weather_json['list'][0]['weather'][0]['main']
-        weather_string = '<tr><td>{temperature}°C</td><td>{max}/{min}°C</td> <td>{humidity}%</td></tr>'.format(
+        weather_string = '<tr><td>{temperature}°C</td><td>{max}/{min}°C</td></tr><tr><td>Luftfeuchte</td> <td>{humidity}%</td></tr> '.format(
             temperature=temperature, min=tempmin, max=tempmax, humidity=humidity)
-        weather_string = weather_string + '<tr><td>{sunrise}</td><td>{sunset}</td><td>{clouds}%</td>     </tr>'.format(
-            sunrise=sunrise, sunset=sunset, clouds=clouds)
-        weather_string = weather_string + '<tr><td colspan=2 > {mode}</td> <td>{pressure}</td>    </tr>'.format(
+        weather_string = weather_string + '<tr><td>{sunrise}</td><td>{sunset}</td></tr>'.format(
+            sunrise=sunrise, sunset=sunset)
+        weather_string = weather_string + '<tr><td colspan=2 > {mode}</td></tr><tr><td>Luftdruck</td> <td>{pressure}</td>    </tr>'.format(
             mode=mode, pressure=pressure)
         weather_string = weather_string + '\n' + parse_forcast(weather_json)
     return weather_string
@@ -97,7 +98,7 @@ def weather_info(apikey):
 class Root(object):
     @cherrypy.expose
     def index(self):
-        content = {'trainstation': trainstation_info(), 'weather': weather_info(''),
+        content = {'trainstation': trainstation_info(), 'weather': weather_info('197c0c3f179cac581544727f0e433132'),
                    'feed': get_tagesschau_first()}
         with open('newview.html') as template_file:
             template = Template(template_file.read())
