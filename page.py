@@ -56,8 +56,9 @@ def parse_forecast_day(data, day, day_of_week):
 
     mode = data['list'][day]['weather'][0]['main']
     return ' <tr><td> {daystring}</td><td>{max}/{min}°C</td></tr><tr><td>{mode} </td></tr>'.format(daystring=day_string,
-                                                                                          max=tempmax, min=tempmin,
-                                                                                          mode=mode)
+                                                                                                   max=tempmax,
+                                                                                                   min=tempmin,
+                                                                                                   mode=mode)
 
 
 def parse_forcast(weather_json):
@@ -96,6 +97,12 @@ def weather_info(apikey):
 
 
 class Root(object):
+    def __init__(self):
+        with open('settings.json') as settingfile:
+            settings = json.load(settingfile)
+            self.openweatherkey = settings["openweatherkey"]
+            self.place = settings["place"]
+
     @cherrypy.expose
     def index(self):
         content = {'trainstation': trainstation_info(), 'weather': weather_info(''),
