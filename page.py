@@ -35,9 +35,10 @@ def get_tagesschau_first():
     return feed.entries[0].title
 
 
-def trainstation_info():
+def trainstation_info(station):
     trainstation_string = ''
-    with urllib.request.urlopen('https://dbf.finalrewind.org/FRA?mode=json&limit=10') as response:
+    with urllib.request.urlopen(
+            'https://dbf.finalrewind.org/{station}?mode=json&limit=10'.format(station=station)) as response:
         station_json = json.loads(response.read())
         for train in station_json["departures"]:
             train_string = form_trainstation_string(trainnumber=train['train'], destination=train['destination'],
@@ -72,10 +73,10 @@ def parse_forcast(weather_json):
     return next_day_weather
 
 
-def weather_info(apikey):
+def weather_info(apikey, place):
     weather_string = ''
-    with urllib.request.urlopen('http://api.openweathermap.org/data/2.5/forecast?q=Raunheim&appid={apikey}'.format(
-            apikey=apikey)) as response:
+    with urllib.request.urlopen('http://api.openweathermap.org/data/2.5/forecast?q={place}&appid={apikey}'.format(
+            apikey=apikey, place=place)) as response:
         weather_json = json.loads(response.read())
         sunrise = time.strftime(" %H:%M", time.localtime(weather_json['city']['sunrise']))
         sunset = time.strftime(" %H:%M", time.localtime(weather_json['city']['sunset']))
@@ -105,7 +106,7 @@ class Root(object):
 
     @cherrypy.expose
     def index(self):
-        content = {'trainstation': trainstation_info(), 'weather': weather_info(''),
+        content = {'trainstation': trainstation_info(self.place), 'weather': weather_info(self.openweatherkey),
                    'feed': get_tagesschau_first()}
         with open('newview.html') as template_file:
             template = Template(template_file.read())
