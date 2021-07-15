@@ -106,7 +106,7 @@ class Root(object):
 
     @cherrypy.expose
     def index(self):
-        content = {'trainstation': trainstation_info(self.place), 'weather': weather_info(self.openweatherkey),
+        content = {'trainstation': trainstation_info(self.place), 'weather': weather_info(self.openweatherkey,self.place),
                    'feed': get_tagesschau_first()}
         with open('newview.html') as template_file:
             template = Template(template_file.read())
