@@ -42,7 +42,7 @@
         if(minutes < 10){
         minutes = "0"+minutes;
         }
-        var german_string = datum.getDate()+"."+datum.getMonth()+"."+datum.getFullYear()+"\t"+datum.getHours()+":"+minutes;
+        var german_string = datum.getDate()+"."+(datum.getMonth()+1)+"."+datum.getFullYear()+"\t"+datum.getHours()+":"+minutes;
         var test = document.getElementById("zeit").innerHTML  = german_string;
 
 
